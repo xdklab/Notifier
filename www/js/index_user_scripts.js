@@ -12,8 +12,7 @@
     $(document).on("click", "#btn_beep", function(evt)
     {
         /* your code goes here */ 
-        // beep 
-        intel.xdk.notification.beep(1);
+        navigator.notification.beep(1);
         
     });
     
@@ -21,19 +20,37 @@
     $(document).on("click", "#btn_vibrate", function(evt)
     {
         /* your code goes here */ 
-        intel.xdk.notification.vibrate();
-
+        navigator.vibrate(1000);
     });
     
         /* button  #btn_sound */
     $(document).on("click", "#btn_sound", function(evt)
     {
         /* your code goes here */ 
-       // intel.xdk.player.playSound("bark.wav");
-        try {
-                intel.xdk.player.playSound(intel.xdk.webRoot + "sounds/bark.wav");
-            } catch (e) {}
-
+        // get the webroot 
+        var rootpath = window.location.href ;
+        rootpath = rootpath.substring( 0, rootpath.lastIndexOf('/') ) ;
+        
+        // if it is a real iOS device the webroot is "/"
+        var ua = navigator.userAgent; 
+        if( !window.tinyHippos && ua.match(/(ios)|(iphone)|(ipod)|(ipad)/ig) ) { // it's not an emulator and it's iOS  
+            rootpath = "" ;
+        }
+        
+        var mediaURL = rootpath + "/sounds/bark.wav";
+     
+        var my_media = new Media(mediaURL,
+                            // success callback
+                            function(){
+                                console.log("media play successful");
+                            },
+                            // error callback
+                            function(){
+                                console.log("media play error" + err);
+                            }
+                        );
+        my_media.play();
+   
     });
     
     }
